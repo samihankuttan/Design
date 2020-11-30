@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta Tag -->
+    <meta charset="utf-8">
+    <meta name='copyright' content=''>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Custom Wristband</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.css">
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/magnific-popup.min.css">
+
+    <link rel="stylesheet" href="css/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/slicknav.min.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="ckeditor/ckeditor.js"></script>
+    <script src="ckeditor/samples/js/sample.js"></script>
+    <link rel="stylesheet" href="ckeditor/samples/css/samples.css">
+    <link rel="stylesheet" href="ckeditor/samples/toolbarconfigurator/lib/codemirror/neo.css">
+    <link rel="stylesheet" href="css/mystyle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js" integrity="sha512-jzL0FvPiDtXef2o2XZJWgaEpVAihqquZT/tT89qCVaxVuHwJ/1DFcJ+8TBMXplSJXE8gLbVAUv+Lj20qHpGx+A==" crossorigin="anonymous"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/TweenMax.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/utils/Draggable.min.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            console.log('----------> Hi samihan  ---> $(document).ready ');
+
+
+            var mouse_on_logo_remove_btn = false;
+            var mouse_on_text1_remove_btn = false;
+
+            $('#canvas-area').hide();
+            $('#btn-remove-logo').hide();
+            $('#btn-remove-text1').hide();
+
+
+            $('#close-preview').click(function() {
+                $('#canvas-area').fadeOut();
+            });
+            $('.Cbtn').click(function() {
+                refreshCanvas();
+            });
+            $('.swatch').click(function() {
+                refreshCanvas();
+            });
+            $('#myP').click(function() {
+                refreshCanvas();
+            });
+            $('#TextField').change(function() {
+                refreshCanvas();
+            });
+            $('#TextField').keyup(function() {
+                refreshCanvas();
+            });
+            $('#btn-Preview').click(function() {
+                refreshCanvas();
+                $('#canvas-area').fadeIn();
+            });
+
+            function makeSVG(parent, tag, attrs) {
+                var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                for (var k in attrs) {
+                    /*
+                    if (k == "xlink:href") {
+                        el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', attrs[k]);
+                    } else {
+                        el.setAttribute(k, attrs[k]);
+                    }
+                    */
+                    el.setAttribute(k, attrs[k]);
+                }
+                console.log('makeSVG > el > ', el);
+                document.getElementById(parent).appendChild(el);
+            }
+
+            $('#new_upload_btn').click(function() {
+                // var html = document.getElementById('img-upload-area').innerHTML;
+                var input = document.getElementById('img-upload-area').getElementsByTagName('input').length;
+                console.log('input > ', input);
+                var new_input = '<input id="upload" class="logo_image_' + input + '" type="file" /><br/><br/>';
+                console.log('new_input > ', new_input);
+                $("#img-upload-area").append(new_input); //append new upload btn to div
+                var logo_image = document.getElementById('band').getElementsByClassName('logo').length;
+                console.log('logo_image > ', logo_image);
+                //  var new_svg_logo_image = '<image class="logo" id="logo_image_' + logo_image + '" xlink:href=""  x="82.2" y="-0.1" > </image>';
+                //  console.log('new_svg_logo_image > ', new_svg_logo_image);
+                //var SVGelements = document.getElementById('band').innerHTML;
+                //console.log('SVGelements > ', SVGelements);
+                //var newInner = SVGelements + new_svg_logo_image;
+                //document.getElementById('band').innerHTML = newInner;
+                //$("#band").append(new_svg_logo_image);
+                var ID = 'logo_image_' + logo_image;
+                makeSVG('band', 'image', {
+                    class: 'logo',
+                    id: ID,
+                    x: '82.2',
+                    y: '-0.1',
+                    "xlink:href": ''
+                });
+                resetElement();
+            });
+
+            function resetElement() {
+                var svgElement = document.getElementById('band');
+                console.log('svgElement > ', svgElement);
+                var rawHTML = '@Html.Raw(ViewBag.svgcontent)';
+                console.log('rawHTML > ', rawHTML);
+            }
+
+
+            $(document).on("change", "#upload", function(e) {
+                var currentBlobData = null;
+                console.log('e.target : ', e.target);
+                var className = $(e.target).attr('class');
+                console.log('className : ', className);
+                var patternImage = document.querySelector("#" + className);
+                console.log('patternImage > ', patternImage);
+
+                var file = this.files[0];
+                console.log('file : ', file);
+                console.log('file type : ', file.type);
+                if (file.type === 'image/png' || file.type === 'image/jpeg') {
+
+
+
+                    const reader = new FileReader();
+                    reader.addEventListener("load", function() {
+                        console.log(' reader.result : ', reader.result);
+                        patternImage.setAttribute("xlink:href", reader.result);
+                    }, false);
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
+                    console.log('reader : ', reader);
+
+                    var SVGelements = document.getElementById('band').innerHTML;
+                    console.log('SVGelements > ', SVGelements);
+                } else {
+                    alert('Please upload PNG & JPG format images only.');
+                }
+
+
+
+
+            });
+
+            /*
+            function readDURL(f, reader){
+                return reader.readAsDataURL(f);
+            }
+            */
+
+            //----------------------------LOGO Operations--------------------------------------
+            $('#btn-remove-logo').mouseover(function() {
+                mouse_on_logo_remove_btn = true;
+                $('#btn-remove-logo').show();
+            });
+
+            $('.logo').mouseover(function() {
+                $('#btn-remove-logo').fadeIn();
+            });
+            $('.logo').click(function() {
+                mouse_on_logo_remove_btn = true;
+                $('#btn-remove-logo').fadeIn();
+            });
+            $('.logo').mouseout(function() {
+                if (mouse_on_logo_remove_btn) {} else {
+                    $('#btn-remove-logo').fadeOut();
+                }
+            });
+
+            $('#btn-remove-logo').click(function() {
+                var patternImage = document.querySelector("#logo_image");
+                patternImage.setAttribute("xlink:href", null);
+                $('#btn-remove-logo').hide();
+            });
+
+            //------------------------------LOGO Operations ENDS-------------------------------
+
+
+            //----------------------------TEXT Operations--------------------------------------
+            $('#btn-remove-text1').mouseover(function() {
+                mouse_on_text1_remove_btn = true;
+                $('#btn-remove-text1').show();
+
+            });
+            $('.myP').mouseover(function() {
+                var t = document.getElementById("myP").textContent;
+                // console.log('t > ',t);
+                $('#btn-remove-text1').fadeIn();
+
+            });
+            $('.myP').click(function() {
+                mouse_on_text1_remove_btn = true;
+                $('#btn-remove-text1').fadeIn();
+
+            });
+            $('.myP').mouseout(function() {
+                if (mouse_on_text1_remove_btn) {} else {
+                    $('#btn-remove-text1').fadeOut();
+                }
+            });
+
+            $('#btn-remove-text1').click(function() {
+                document.getElementById("myP").textContent = null;
+                document.getElementById("TextField").value = null;
+                $('#btn-remove-text1').hide();
+            });
+
+            //------------------------------TEXT Operations ENDS-------------------------------
+
+
+
+
+
+            function refreshCanvas() {
+                var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+                var data = (new XMLSerializer()).serializeToString(svg);
+                var DOMURL = window.URL || window.webkitURL || window;
+                var img = new Image();
+                var svgBlob = new Blob([data], {
+                    type: 'image/svg+xml;charset=utf-8'
+                });
+                var url = DOMURL.createObjectURL(svgBlob);
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0);
+                    DOMURL.revokeObjectURL(url);
+                    var imgURI = canvas
+                        .toDataURL('image/png')
+                        .replace('image/png', 'image/octet-stream');
+                };
+                img.src = url;
+            }
+
+
+
+
+            $('#tc').click(function() {
+                var x = document.getElementById("tc").value;
+                //  console.log('Hi -> textcolor : x = ', x);
+                document.getElementById("myP").style.color = x;
+                // console.log(' document.getElementById -> ', document.getElementById("myP"));
+            });
+
+
+            //DOWNLOAD AS PNG
+            var btn = document.getElementById('save_png');
+            var svg = document.getElementById('band');
+            var canvas = document.querySelector('canvas');
+
+            function triggerDownload(imgURI) {
+                var evt = new MouseEvent('click', {
+                    view: window,
+                    bubbles: false,
+                    cancelable: true
+                });
+                var a = document.createElement('a');
+                a.setAttribute('download', 'wristband.png');
+                a.setAttribute('href', imgURI);
+                a.setAttribute('target', '_blank');
+                a.dispatchEvent(evt);
+            }
+
+            btn.addEventListener('click', function() {
+                var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+                var data = (new XMLSerializer()).serializeToString(svg);
+                var DOMURL = window.URL || window.webkitURL || window;
+                var img = new Image();
+                var svgBlob = new Blob([data], {
+                    type: 'image/svg+xml;charset=utf-8'
+                });
+                var url = DOMURL.createObjectURL(svgBlob);
+                console.log('url : ', url);
+                try {
+                    img.onload = function() {
+                        console.log('img.onload : ', img);
+                        ctx.drawImage(img, 0, 0);
+                        DOMURL.revokeObjectURL(url);
+
+                        var imgURI = canvas
+                            .toDataURL('image/png')
+                            .replace('image/png', 'image/octet-stream');
+                        console.log('imgURI : ', imgURI);
+
+                        triggerDownload(imgURI);
+                    };
+                } catch (error) {
+                    console.log('error > ', error);
+                }
+                img.src = url;
+            })
+
+
+            // var element = $("#image-content-div");
+            // var getCanvas;
+
+
+            $("#btn-svg").on('click', function() {
+                console.log('btn-svg > ');
+
+                var svgElement = document.getElementById('band');
+                var svgXml = (new XMLSerializer).serializeToString(svgElement);
+                var svgData = "data:image/svg+xml," + encodeURIComponent(svgXml);
+                console.log('svgData > ', svgData);
+                console.log('svgElement > ', svgElement);
+                $("#btn-svg").attr("download", "customBandSvg.svg").attr("href", svgData);
+            });
+
+            $('#save-btn').on('click', function() {
+                console.log('save-btn > ');
+
+                var svgElementText = document.getElementById('divSVG').innerHTML.toString();
+                console.log('save-btn > svgElementText > ', svgElementText);
+
+                var Data = {
+                    id: '123456',
+                    svg: svgElementText
+                };
+
+                console.log('save-btn > Data > ', Data);
+
+
+
+
+
+            });
+
+
+
+
+
+
+        });
+    </script>
+
+</head>
+
+<body class="js" id="main">
+
+
+
+    <header class="header shop">
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 col-12">
+                        <div class="top-left">
+                            <ul class="list-main">
+                            </ul>
+                        </div>
+                        <div class="right-content">
+                            <ul class="list-main">
+                                <li>
+                                    <a href="#">My account</a></li>
+                                <li>
+                                    <a href="#">Login</a></li>
+                                <div class="sinlge-bar shopping">
+                                    <a href="#" class="single-icon"><i class="ti-bag"></i> Shopping cart </a>
+                                    <div class="shopping-item">
+                                        <div class="dropdown-cart-header">
+                                            <span>Items</span>
+                                            <a href="#">View Cart</a>
+                                        </div>
+                                        <ul class="shopping-list">
+                                        </ul>
+                                        <div class="bottom">
+                                            <div class="total">
+                                                <span>Total</span>
+                                                <span class="total-amount">0</span>
+                                            </div>
+                                            <a href="#" class="btn animate">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <div class="logo">
+                            <!-- <a href="Customize.html"><img src="images/jw.jpeg" alt="logo"></a> -->
+                        </div>
+                        <div class="search-top">
+                            <div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
+                            <div class="search-top">
+                                <form class="search-form">
+                                    <input type="text" placeholder="Search here..." name="search">
+                                    <button value="search" type="submit"><i class="ti-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="mobile-nav"></div>
+                    </div>
+                    <div class="col-lg-8 col-md-7 col-12">
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-12">
+                        <div class="right-bar">
+                            <div class="search-bar-top">
+                                <div class="search-bar">
+                                    <form>
+                                        <input name="search" placeholder="Search store" type="search">
+                                        <button class="btnn"><i class="ti-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-inner">
+            <div class="container">
+                <div class="cat-nav-head">
+                    <div class="row">
+                        <div class="col-lg-9 col-12">
+                            <div class="menu-area">
+                                <nav class="navbar navbar-expand-lg">
+                                    <div class="navbar-collapse">
+                                        <div class="nav-inner">
+                                            <ul class="nav main-menu menu navbar-nav">
+                                                <li class="active"><a href="#">HOME</a></li>
+                                                <li><a href="#">TYVEK WRISTBANDS</a>
+                                                    <ul class="dropdown">
+                                                        <li><a href="#">Stock Wristbands </a></li>
+                                                        <li><a href="#">Custom Wristbands</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li><a href="#">ECODURA WRISTBANDS</a>
+                                                    <ul class="dropdown">
+                                                        <li><a href="#">Stock Wristbands </a></li>
+                                                        <li><a href="#">Custom Wristbands</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li><a href="#">CONTACT US</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <header class="header shop">
+
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="top-left">
+                            <ul class="list-main">
+
+                                <li>
+                                    <button id="save-btn" class="save-btn"> Save </button>
+                                </li>
+                                <li>
+                                    <img style="width:25px;" class="ti-eye ICONS" id="btn-Preview" src="/g-icons/view.png" title="Preview" alt="Preview" />
+                                </li>
+                                <li>
+                                    <img style="width:25px;" class="ti-save ICONS" id="save_png" src="/g-icons/save.png" title="Save Image" alt="Save Image" />
+                                </li>
+                                <li>
+                                    <a id="btn-svg" href="Javascript:void(0)">
+                                        <img style="width:25px;" class="ti-download ICONS" src="/g-icons/download.png" title="Download Svg" alt="Download Svg" />
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="right-content">
+                            <ul class="list-main">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="wedit section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <svg id="restrict" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 8.5">
+                                <g>
+                                    <rect id="nox_1_" x="82.2" y="0" class="st0" width="357.2" height="8.5" />
+                                    <rect x="0" y="0" class="st1" width="82.2" height="8.5" />
+                                    <text transform="matrix(1 0 0 1 17.1536 6.5649)" class="st2 st3 st4">NON
+                                        PRINTABLE</text>
+                                    <text transform="matrix(1 0 0 1 196.621 6.5649)" class="st2 st3 st4">IDEAL PRINTABLE
+                                        AREA FOR BARCODE &amp; LOGOS</text>
+                                    <rect x="439.4" y="0" class="st5" width="269.3" height="8.5" />
+                                    <rect x="708.7" y="0" class="st1" width="11.3" height="8.5" />
+                                    <text transform="matrix(1 0 0 1 548.7627 6.5649)" class="st2 st3 st4">PRINTABLE
+                                        AREA</text>
+                                </g>
+                            </svg>
+                            <br>
+                            <br>
+
+
+
+                            <br>
+
+
+                            <div id="divSVG">
+
+                                <svg id="band" data-name="Layer 1" xmlns:xlink="http://www.w3.org/2000/svg" viewBox="0 0 720 54"> 
+                                   <rect id="wristband" width="720" height="54" style="fill:#fff;stroke:#231F20;stroke-width:0.2;stroke-miterlimit:10;" />                                      
+                                   <rect id="nox" x="82.2" width="626.5" height="54" style="fill:#ffffff00" />           
+                                   <rect id="noxBarcode" x="84" width="622" height="49" style="fill:#ffffff00" />                                        
+                                   <path id="numb" d="M7.2,5.7l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.3,0.5,2.3,1.1,0.1,1.6          l-10.7,2c-2.5,0.7-2.4,1.2,0.3,1.6l10.7,1.9c2.3,0.4,2.3,0.8,0,1.4L8.2,27" style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M20.4,5.7l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.3,0.5,2.4,1.1,0.1,1.6          l-10.6,2c-2.6,0.7-2.5,1.2,0.2,1.6L35,22.7c2.2,0.4,2.2,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M33.6,5.7l14,2.7c1.8,0.5,2,0.8,0.2,1.4L37,12.1c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.4,0.5,2.4,1.1,0.1,1.6          l-10.6,2c-2.6,0.7-2.4,1.2,0.3,1.6l10.7,1.9c2.2,0.4,2.2,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M46.8,5.7l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6L61,15.6c2.4,0.5,2.4,1.1,0.1,1.6          l-10.7,2c-2.5,0.7-2.4,1.2,0.3,1.6l10.7,1.9c2.3,0.4,2.3,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M8,27l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.3,0.5,2.3,1.1,0.1,1.6          l-10.7,2c-2.5,0.7-2.4,1.2,0.3,1.6l10.7,1.9c2.3,0.4,2.3,0.8,0,1.4L9,48.3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M21.1,27l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.3,0.5,2.4,1.1,0.1,1.6          l-10.6,2c-2.6,0.7-2.5,1.2,0.2,1.6l10.7,1.9c2.2,0.4,2.2,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M34.4,27l14,2.7c1.8,0.5,2,0.8,0.2,1.4l-10.9,2.3c-2.4,0.5-2.7,1,0,1.6l10.8,1.9c2.4,0.5,2.4,1.1,0.1,1.6          l-10.6,2c-2.6,0.7-2.4,1.2,0.3,1.6L49,43.9c2.2,0.4,2.2,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                      
+                                   <path id="numb" d="M47.6,27l14,2.7c1.8,0.5,2.1,0.8,0.3,1.4L51,33.4c-2.4,0.5-2.7,1,0,1.6l10.7,1.9c2.4,0.5,2.4,1.1,0.1,1.6          l-10.7,2c-2.5,0.7-2.4,1.2,0.3,1.6l10.7,1.9c2.3,0.4,2.3,0.8,0,1.4l-13.6,3"                                          style="fill:transparent;stroke:#A7A9AC;stroke-width:0.231;" />                                        
+                                   <text id="Pnumb" transform="matrix(0 -1 1 0 78.4686 50)"                                          style="font-size:14px;fill:#221f1f;font-family:ArialMT, Arial;">000001</text>                                        
+                                   <image id="bg_image" x="82.2" y="-0.1" xlink:href="" />                                                                           
+                                   <image class="logo" id="logo_image"                                              xlink:href=""  x="82.2" y="-0.1" />                           
+                                   <image class="code_image" id="code_image" x="100" y="8"  xlink:href=""/>                                             
+                                    <text id="myP" class="myP" transform="translate(120 35)"                                          style="font-size:15px;fill:#231f20;font-family:arial;font-weight:100"></text>                                      
+                                    <text id="myPnew" class="myPnew" transform="translate(120 35)"                                          style="font-size:15px;fill:#231f20;font-family:arial;font-weight:100"></text>                                             
+                                 </svg>
+
+                            </div>
+
+
+
+
+                            <div id='canvas-area'>
+                                <div><br/></div>
+                                <div class='close-preview-btn'>
+                                    <a id='close-preview'><span class="close">&times;</span></a>
+                                </div>
+                                <h2>Preview Image</h2>
+                                <div><br/></div>
+                                <div>
+                                    <canvas id="canvas" width="1000" height="72"></canvas>
+                                </div>
+                                <div><br/><br/></div>
+
+                            </div>
+
+
+    </section>
+
+
+    <div class="product-area section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-info tabborder">
+                        <div class="nav-main">
+
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Background" role="tab">Background</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#AddText" role="tab">Add Text / Image</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Security" role="tab">Add Security</a></li>
+                            </ul>
+
+                        </div>
+                        <div class="tab-content tab-c" id="myTabContent">
+
+                            <div class="tab-pane fade show active" id="Background" role="tabpanel">
+                                <div class="tab-single">
+                                    <div class="row">
+
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            <p style="text-align:center; font-size:15px; margin-bottom:10px; font-weight:500;">
+                                                Choose Color:</p>
+                                            <div class="slider_block">
+                                                <div class="colour_slider" id="wcontainer">
+                                                    <div class="swatch-panel" data-hex="#60C3AD" data-colourid="1426">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#60C3AD" style="background-color:#60C3AD">&nbsp;</button>
+                                                        <div class="name">Aqua</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#000000" data-colourid="1427">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#000000" style="background-color:black">&nbsp;</button>
+                                                        <div class="name">Black</div>
+                                                    </div>
+
+
+
+                                                    <div class="swatch-panel" data-hex="#21A567" data-colourid="1433">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#21A567" style="background-color:#21A567">&nbsp;</button>
+                                                        <div class="name">Green</div>
+                                                    </div>
+
+
+
+                                                    <div class="swatch-panel" data-hex="#645FAA" data-colourid="1436">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#645FAA" style="background-color:#645FAA">&nbsp;</button>
+                                                        <div class="name">Purple</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#F15B40" data-colourid="1431">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#F15B40" style="background-color:#F15B40">&nbsp;</button>
+                                                        <div class="name">Red</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#4BA6DD" data-colourid="1434">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#4BA6DD" style="background-color:#4BA6DD">&nbsp;</button>
+                                                        <div class="name">Sky Blue</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#A7A9AC" data-colourid="1435">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#A7A9AC" style="background-color:#A7A9AC">&nbsp;</button>
+                                                        <div class="name">Grey</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#ffffff" data-colourid="1426">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#ffffff" style="background-color:white">&nbsp;</button>
+                                                        <div class="name">White</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#FFD800" data-colourid="1430">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#FFD800" style="background-color:#FFD800">&nbsp;</button>
+                                                        <div class="name">Yellow</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#414280" data-colourid="1432">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#414280" style="background-color:#414280">&nbsp;</button>
+                                                        <div class="name">Dark Purple</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#0054A6" data-colourid="1428">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#0054A6" style="background-color:#0054A6">&nbsp;</button>
+                                                        <div class="name">Dark Blue</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#937CB9" data-colourid="1429">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#937CB9" style="background-color:#937CB9">&nbsp;</button>
+                                                        <div class="name">Lavender</div>
+                                                    </div>
+
+                                                    <div class="swatch-panel" data-hex="#F15B67" data-colourid="1429">
+                                                        <button onclick="changeColor(id)" class="Cbtn" id="#F15B67" style="background-color:#F15B67">&nbsp;</button>
+                                                        <div class="name">Sunfire</div>
+                                                    </div>
+
+                                                    <br>
+
+                                                    <input onclick="bgcolor()" type="color" id="myColor">
+                                                    <div id="wristband">
+                                                        <div id="demo"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            <p style="text-align:center; font-size:15px; margin-bottom:10px; font-weight:500;">
+                                                Choose Patterns:</p>
+                                            <div class="slider_block slider">
+                                                <div class="colour_slider" id="wcontainer">
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P1" onclick="P('images/patterns/camoblue.jpg')" style="background: url(images/camo-blue.jpg);">&nbsp;</button>
+                                                        <div class="name">Camo Blue</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P2" onclick="P('images/patterns/camogreen.jpg')" style="background: url(images/camo-green.jpg);">&nbsp;</button>
+                                                        <div class="name">Camo Green</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P3" onclick="P('images/patterns/camoorange.jpg')" style="background: url(images/camo-orange.jpg);">&nbsp;</button>
+                                                        <div class="name">Camo Orange</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P4" onclick="P('images/patterns/camopink.jpg')" style="background: url(images/camo-pink.jpg);">&nbsp;</button>
+                                                        <div class="name">Camo Pink</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P5" onclick="P('images/patterns/diamonds.jpg')" style="background: url(images/diamonds.jpg);">&nbsp;</button>
+                                                        <div class="name">Diamonds</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P6" onclick="P('images/patterns/rainbowbars.jpg')" style="background: url(images/rainbow-bars.jpg);">&nbsp;</button>
+                                                        <div class="name">Rainbow Bars</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P7" onclick="P('images/patterns/starsblack.jpg')" style="background: url(images/stars-black.jpg);">&nbsp;</button>
+                                                        <div class="name">Stars Black</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P8" onclick="P('images/patterns/starsgreen.jpg')" " style=" background: url(images/stars-green.jpg); ">&nbsp;</button>
+											            <div class=" name ">Stars Green</div>
+											        </div>
+											        <div class=" swatch-panel ">
+											            <button class=" swatch P-swatch " id=" P9 " onclick=" P( 'images/patterns/starsred.jpg' ) " style=" background: url(images/stars-red.jpg); ">&nbsp;</button>
+											            <div class=" name ">Stars Red</div>
+											        </div>
+											        <div class=" swatch-panel ">
+											            <button class=" swatch P-swatch " id=" P10 " onclick=" P( 'images/patterns/starsyellow.jpg' ) "" style="background: url(images/stars-yellow.jpg);">&nbsp;</button>
+                                                        <div class="name">Stars Yellow</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P11" onclick="P('images/patterns/stars.jpg')" style="background: url(images/stars.jpg);">&nbsp;</button>
+                                                        <div class="name">Stars</div>
+                                                    </div>
+                                                    <div class="swatch-panel">
+                                                        <button class="swatch P-swatch" id="P12" onclick="P('images/patterns/starslight.jpg')" style="background: url(images/stars-light.jpg);">&nbsp;</button>
+                                                        <div class="name">Stars Light</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            <p style="text-align:center; font-size:15px; margin-bottom:10px; font-weight:500;">
+                                                Choose Gradient:</p>
+                                            <div class="slider_block">
+                                                <div class="colour_slider" id="wcontainer">
+                                                    <div class="swatch-panel" data-hex="url(images/rainbow.jpg)" data-colourid="1466">
+                                                        <button class="swatch P-swatch" id="G1" onclick="G('images/Gradients/Rainbow.jpg')" style="background: url(images/rainbow.jpg);">&nbsp;</button>
+                                                        <div class="name">Rainbow</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/rainbow-fade.jpg)" data-colourid="1467">
+                                                        <button class="swatch P-swatch" id="G2" onclick="G('images/Gradients/Rainbowfade.jpg')" style="background: url(images/rainbow-fade.jpg);">&nbsp;</button>
+                                                        <div class="name">Rainbow Fade</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-blue.jpg)" data-colourid="1468">
+                                                        <button class="swatch P-swatch" id="G3" onclick="G('images/Gradients/Gradientblue.jpg')" style="background: url(images/gradient-blue.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Blue</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-green.jpg)" data-colourid="1469">
+                                                        <button class="swatch P-swatch" id="G4" onclick="G('images/Gradients/Gradientgreen.jpg')" style="background: url(images/gradient-green.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Green</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-purple.jpg)" data-colourid="1470">
+                                                        <button class="swatch P-swatch" id="G5" onclick="G('images/Gradients/Gradientpurple.jpg')" style="background: url(images/gradient-purple.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Purple</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-red.jpg)" data-colourid="1471">
+                                                        <button class="swatch P-swatch" id="G6" onclick="G('images/Gradients/Gradientred.jpg')" style="background: url(images/gradient-red.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Red</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-yellow.jpg)" data-colourid="1472">
+                                                        <button class="swatch P-swatch" id="G7" onclick="G('images/Gradients/Gradientyellow.jpg')" style="background: url(images/gradient-yellow.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Yellow</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-green-to-blue.jpg)" data-colourid="1473">
+                                                        <button class="swatch P-swatch" id="G8" onclick="G('images/Gradients/greentoblue.jpg')" style="background: url(images/gradient-green-to-blue.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Green to Blue</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-green-to-purple.jpg)" data-colourid="1474">
+                                                        <button class="swatch P-swatch" id="G9" onclick="G('images/Gradients/greentopurple.jpg')" style="background: url(images/gradient-green-to-purple.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Green to Purple</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-red-to-purple.jpg)" data-colourid="1475">
+                                                        <button class="swatch P-swatch" id="G10" onclick="G('images/Gradients/redtopurple.jpg')" style="background: url(images/gradient-red-to-purple.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Red to Purple</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/Gradients/Redtoyellow.jpg)" data-colourid="1476">
+                                                        <button class="swatch P-swatch" id="G11" onclick="G('images/Gradients/redtoyellow.jpg')" style="background: url(images/gradient-red-to-yellow.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Red to Yellow</div>
+                                                    </div>
+                                                    <div class="swatch-panel" data-hex="url(images/gradient-yellow-to-blue.jpg)" data-colourid="1477">
+                                                        <button class="swatch P-swatch" id="G12" onclick="G('images/Gradients/yellowtoblue.jpg')" style="background: url(images/gradient-yellow-to-blue.jpg);">&nbsp;</button>
+                                                        <div class="name">Gradient Yellow to Blue</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="AddText" role="tabpanel">
+                                <div class="tab-single">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-4 col-md-4 col-12">
+
+                                            <div class="adjoined-bottom">
+                                                <div class="grid-container">
+                                                    <div class="grid-width-100">
+
+                                                        <div id="text-content">
+                                                            <ul id="text-content">
+                                                                <li class="txt_input">
+                                                                    <div class="label" style="font-size:15px;">Line 1:
+                                                                    </div>
+                                                                    <input type="text" id="TextField" class="f_text_input" maxlength="50" placeholder="Text goes here" onkeyup="demo()">
+                                                                </li>
+                                                                <li class="font">
+                                                                    <div class="widget-dropdown">
+                                                                        <div class="label" style="font-size:15px;">Font:
+                                                                        </div>
+                                                                        <select onchange="fontstyle(this)" id="input-font" class="f_dropdown_input">
+                                                                            <option value="Arial"
+                                                                                style="font-family: Arial, sans-serif"
+                                                                                selected="selected">Arial</option>
+                                                                            <option value="Times New Roman"
+                                                                                style="font-family: 'Times New Roman', sans-serif">
+                                                                                Times New Roman </option>
+                                                                            <option value="Lato"
+                                                                                style="font-family: Lato, sans-serif">
+                                                                                Lato</option>
+                                                                            <option value="cursive"
+                                                                                style="font-family: Caveat Brush, cursive">
+                                                                                cursive</option>
+                                                                            <option value="Roboto"
+                                                                                style="font-family: Roboto, sans-serif">
+                                                                                Roboto</option>
+                                                                            <option value="Droid Serif"
+                                                                                style="font-family: Droid Serif, serif">
+                                                                                Droid Serif</option>
+                                                                            <option value="Impact"
+                                                                                style="font-family: Impact, serif">
+                                                                                Impact</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li>
+                                                                    <div class="label" style="font-size:15px;">Font Size:
+                                                                    </div>
+                                                                    <button type="button" id="tbtn" onclick="Increase()">+</button>
+                                                                    <button type="button" id="tbtn" onclick="Decrease()">-</button>
+                                                                </li>
+                                                                <li style="margin-left: 20px;">
+                                                                    <div class="label" style="font-size:15px;">Styling:
+                                                                    </div>
+                                                                    <div class="widget--text_controls">
+                                                                        <a href="#" class="widget--txt_bold" onclick="bold()" title="Bold">B</a>
+                                                                        <a href="#" class="widget--txt_italic" onclick="italic()" title="Italic">i</a>
+                                                                        <a href="#" class="widget--txt_underline" onclick="underline()" title="Underline">U</a>
+                                                                        <a href="#" class="widget--txt_uppercase" onclick="uppercase()" title="Uppercase">A</a>
+                                                                        <a href="#" class="widget--txt_lowercase" onclick="lowercase()" title="Lowercase">a</a>
+                                                                    </div>
+                                                                </li>
+                                                                <li style="margin-left: 20px;">
+                                                                    <div class="label" style="font-size:15px;">Color:
+                                                                    </div>
+                                                                    <div class="widget--text_controls">
+                                                                        <div class="widget--txt_color single-color">
+                                                                            <input onclick="textcolor()" type="color" id="colorpicker_1">
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <br>
+                                                        <button id="add" onclick="addline()" style="background:none; color:red; font-size:18px; border:none;">+Add
+                                                            New Line (optional)</button>
+                                                        <br>
+
+                                                        <!--LINE 2-->
+                                                        <div id="newline">
+                                                            <div id="text-content">
+                                                                <ul id="text-content">
+                                                                    <li class="txt_input">
+                                                                        <div class="label" style="font-size:15px;">Line 2: </div>
+                                                                        <input type="text" id="TextField2" class="f_text_input" maxlength="50" placeholder="Text goes here" onkeyup="newdemo()">
+                                                                    </li>
+                                                                    <li class="font">
+                                                                        <div class="widget-dropdown">
+                                                                            <div class="label" style="font-size:15px;">
+                                                                                Font:</div>
+                                                                            <select onchange="fontstyle2(this)" id="input-font" class="f_dropdown_input">
+                                                                                <option value="Arial"
+                                                                                    style="font-family: Arial, sans-serif"
+                                                                                    selected="selected">Arial</option>
+                                                                                <option value="Times New Roman"
+                                                                                    style="font-family: 'Times New Roman', sans-serif">
+                                                                                    Times New Roman </option>
+                                                                                <option value="Lato"
+                                                                                    style="font-family: Lato, sans-serif">
+                                                                                    Lato</option>
+                                                                                <option value="cursive"
+                                                                                    style="font-family: Caveat Brush, cursive">
+                                                                                    cursive</option>
+                                                                                <option value="Roboto"
+                                                                                    style="font-family: Roboto, sans-serif">
+                                                                                    Roboto</option>
+                                                                                <option value="Droid Serif"
+                                                                                    style="font-family: Droid Serif, serif">
+                                                                                    Droid Serif</option>
+                                                                                <option value="Impact"
+                                                                                    style="font-family: Impact, serif">
+                                                                                    Impact</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <div class="label" style="font-size:15px;">Font Size:
+                                                                        </div>
+                                                                        <button type="button" id="tbtn" onclick="Increase2()">+</button>
+                                                                        <button type="button" id="tbtn" onclick="Decrease2()">-</button>
+                                                                    </li>
+                                                                    <li style="margin-left: 20px;">
+                                                                        <div class="label" style="font-size:15px;">
+                                                                            Styling:</div>
+                                                                        <div class="widget--text_controls">
+                                                                            <a href="#" class="widget--txt_bold" onclick="bold2()" title="Bold">B</a>
+                                                                            <a href="#" class="widget--txt_italic" onclick="italic2()" title="Italic">i</a>
+                                                                            <a href="#" class="widget--txt_underline" onclick="underline2()" title="Underline">U</a>
+                                                                            <a href="#" class="widget--txt_uppercase" onclick="uppercase2()" title="Uppercase">A</a>
+                                                                            <a href="#" class="widget--txt_lowercase" onclick="lowercase2()" title="Lowercase">a</a>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li style="margin-left: 20px;">
+                                                                        <div class="label" style="font-size:15px;">
+                                                                            Color:</div>
+                                                                        <div class="widget--text_controls">
+                                                                            <div class="widget--txt_color single-color">
+                                                                                <input onclick="textcolor2()" type="color" id="colorpicker_2">
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <br>
+                                                            <button id="remove" onclick="removeline()" style="margin-left:30px; background:none; color:green; font-size:18px; border:none;">-Remove
+                                                                Line</button>
+
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+
+                                                                <P class="tooltip-t">Upload Your Image here </P><br>
+                                                                <a id="new_upload_btn" href="Javascript:void(0)">Add more images</a>
+
+                                                                <br><br> Upload Image
+                                                                <div id="img-upload-area">
+                                                                    <input id="upload" class="logo_image" type="file" /> <br /><br />
+                                                                </div>
+
+
+
+
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="AddImage" role="tabpanel">
+                                <div class="tab-single">
+                                    <h1 class="ati">Upload or Select A Logo</h1>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+
+                                            <P class="tooltip-t">Upload a custom logo </P>
+                                            <p style="font-size: 12px;margin-bottom: 10px; margin-top: 8px;">Custom logos work best on a white wristband. You can change the base colour in the previous steps. We accept jpg, jpeg, gif, png and svg file formats.
+                                            </p>
+                                            <label for="fileUpload" class="file-upload btn btn-primary btn-block"><i
+                                                    class="fa fa-upload mr-2"></i>Upload Image
+                                                <input id="upload" type="file" />
+                                            </label>
+
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            Or use our stock logos
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="Security" role="tabpanel">
+                                <h1 class="ati">Increase your event's security with these optional extras</h1>
+                                <div class="tab-single">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            <p class="ast">Add Serial Numbers</p>
+                                            <img src="images/sr.jpg" alt="sr">
+                                            <p class="ast">Start Number</p>
+                                            <p class="ast">(Default start no. 000001, Increased by 1)</p>
+                                            <input type="textbox" id="Serialn" name="Serialn" class="f_text_input" onkeyup="numbering()" maxlength="6" placeholder="000001">
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                            <p class="ast">Add Barcodes/2D Codes
+                                                <div class="code-panel">
+                                                    <button class="code C-code" id="code128" onclick="code('images/barcode128.jpg')" style="background: url(images/code128.jpg);">&nbsp;</button>
+                                                    <div class="codename">Barcode 128</div>
+                                                </div>
+                                                <div class="code-panel">
+                                                    <button class="code C-code" id="code39" onclick="code('images/barcode39.jpg')" style="background: url(images/code39.jpg);">&nbsp;</button>
+                                                    <div class="codename">Barcode 39</div>
+                                                </div>
+                                                <div class="code-panel">
+                                                    <button class="code C-code" id="qrcode" onclick="code('images/Qrcode.jpg')" style="background: url(images/Qr.jpg);">&nbsp;</button>
+                                                    <div class="codename">QR Code</div>
+                                                </div>
+                                                <div class="code-panel">
+                                                    <button class="code C-code" id="datamatrix" onclick="code('images/datamatrix.jpg')" style="background: url(images/dm.jpg);">&nbsp;</button>
+                                                    <div class="codename">Data Matrix</div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Tab Area -->
+
+    <!-- Start Footer Area -->
+    <footer class="footer">
+        <!-- Footer Top -->
+        <div class="footer-top section">
+            <div class="container">
+
+            </div>
+        </div>
+        <!-- End Footer Top -->
+
+    </footer>
+    <!-- /End Footer Area -->
+
+    <script>
+        initSample();
+    </script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.0.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+
+    <script src="js/popper.min.js"></script>
+
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/colors.js"></script>
+
+    <script src="js/slicknav.min.js"></script>
+
+    <script src="js/magnific-popup.js"></script>
+
+    <script src="js/waypoints.min.js"></script>
+
+    <script src="js/scrollup.js"></script>
+
+    <script src="js/onepage-nav.min.js"></script>
+
+    <script src="js/easing.js"></script>
+
+    <script src="js/active.js"></script>
+
+    <script src="js/preview.js"></script>
+
+    <script src="js/download.js"></script>
+
+    <script src="js/background.js"></script>
+
+    <script src="js/addtext.js"></script>
+
+    <script src="js/addimage.js"></script>
+
+    <script src="js/addsecurity.js"></script>
+
+    <script src="js/buttons.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</body>
+
+</html>
